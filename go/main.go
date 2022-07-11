@@ -468,7 +468,27 @@ func getIsuList(c echo.Context) error {
 
 	responseList := []GetIsuListResponse{}
 	var isuconditionAndIsu []IsuConditionAndIsu
-	err = db.Get(&isuconditionAndIsu, "SELECT * FROM isu_condition INNER JOIN isu ON `isu_condition`.`jia_isu_uuid` = `isu`.`jia_isu_uuid` WHERE `timestamp` IN (SELECT MAX(`isu_condition`.`timestamp`) FROM `isu_condition` INNER JOIN `isu` ON `isu_condition`.`jia_isu_uuid` = `isu`.`jia_isu_uuid` WHERE `isu`.`jia_user_id` = ? GROUP BY `isu`.`jia_isu_uuid`) ORDER BY isu.`id` DESC", jiaUserID)
+	stmt := `
+	SELECT
+	i.id,
+	i.name,
+	i.character,
+	c.jia_isu_uuid,
+	c.timestamp,
+	c.is_sitting,
+	c.condition,
+	c.message
+	FROM isu AS i
+	LEFT JOIN isu_condition AS c
+	ON c.id = (
+			SELECT c2.id
+			FROM isu_condition AS c2
+			WHERE c2.jia_isu_uuid = i.jia_isu_uuid
+			ORDER BY TIMESTAMP DESC LIMIT 1
+	)
+	WHERE jia_user_id=?
+	ORDER BY i.id DESC`
+	err = db.Select(&isuconditionAndIsu, stmt, jiaUserID)
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
