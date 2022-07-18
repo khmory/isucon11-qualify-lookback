@@ -980,7 +980,7 @@ func getIsuConditions(c echo.Context) error {
 	}
 
 	var isuName string
-	err = db.Get(&isuName,
+	err = db.Get(&isuame,
 		"SELECT name FROM `isu` WHERE `jia_isu_uuid` = ? AND `jia_user_id` = ?",
 		jiaIsuUUID, jiaUserID,
 	)
@@ -1090,7 +1090,7 @@ func getTrend(c echo.Context) error {
 	for _, character := range characterList {
 		isuList := []Isu{}
 		err = db.Select(&isuList,
-			"SELECT * FROM `isu` WHERE `character` = ?",
+			"SELECT `jia_isu_uuid` FROM `isu` WHERE `character` = ?",
 			character.Character,
 		)
 		if err != nil {
@@ -1104,7 +1104,7 @@ func getTrend(c echo.Context) error {
 		for _, isu := range isuList {
 			conditions := []IsuCondition{}
 			err = db.Select(&conditions,
-				"SELECT * FROM `isu_condition` WHERE `jia_isu_uuid` = ? ORDER BY timestamp DESC",
+				"SELECT timestamp`, `condition`* FROM `isu_condition` WHERE `jia_isu_uuid` = ? ORDER BY timestamp DESC LIMIT 1",
 				isu.JIAIsuUUID,
 			)
 			if err != nil {
