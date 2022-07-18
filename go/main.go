@@ -177,7 +177,7 @@ type PostIsuConditionRequest struct {
 	Condition   string    `db:"condition" json:"condition"`
 	Message     string    `db:"message" json:"message"`
 	Timestamp   int64     `db: "-" json:"timestamp"`
-	DbTimestamp time.Time `db:"timestamp" json:"timestamp"`
+	DbTimestamp time.Time `db:"timestamp" json:"-"`
 }
 
 type JIAServiceRequest struct {
