@@ -1214,7 +1214,7 @@ func postIsuCondition(c echo.Context) error {
 	fmt.Printf("morii:%s\n",jiaIsuUUID)
 	stmt := "INSERT INTO `isu_condition`" +
 		"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)" +
-		"	VALUES (`" + jiaIsuUUID + "`, :timestamp, :is_sitting, :condition, :message)"
+		"	VALUES ('" + jiaIsuUUID + "', :timestamp, :is_sitting, :condition, :message)"
 	fmt.Printf("morii stmt:%s\n",stmt)
 	_, err = tx.NamedExec(stmt, req)
 	if err != nil {
