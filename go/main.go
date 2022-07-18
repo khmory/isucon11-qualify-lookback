@@ -1203,8 +1203,8 @@ func postIsuCondition(c echo.Context) error {
 	// 	Timestamp int64  `json:"timestamp"`
 	// }
 
-	for _, cond := range req {
-		cond.DbTimestamp = time.Unix(cond.Timestamp, 0)
+	for i, cond := range req {
+		req[i].DbTimestamp = time.Unix(cond.Timestamp, 0)
 
 		if !isValidConditionFormat(cond.Condition) {
 			return c.String(http.StatusBadRequest, "bad request body")
